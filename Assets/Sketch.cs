@@ -26,7 +26,7 @@ sealed class Sketch : MonoBehaviour
             for (var i_x = 0; i_x < _dimensions.x; i_x++)
             {
                 var x = i_x - _dimensions.x / 2 + 0.5f;
-                var y = rand.NextFloat(0.0f, 0.5f) - 5;
+                var y = rand.NextFloat(0.0f, 0.3f) * (0.7f + math.abs(z)) - 5;
 
                 var go = new GameObject("Box", comps);
                 go.transform.parent = transform;
