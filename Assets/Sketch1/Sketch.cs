@@ -3,7 +3,7 @@ using Unity.Mathematics;
 using System.Collections.Generic;
 using Random = Unity.Mathematics.Random;
 
-namespace Sketch {
+namespace Sketch1 {
 
 sealed class Sketch : MonoBehaviour
 {
