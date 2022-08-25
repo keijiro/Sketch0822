@@ -348,7 +348,7 @@ GameObject:
   - component: {fileID: 750797532}
   - component: {fileID: 750797531}
   m_Layer: 0
-  m_Name: Emission
+  m_Name: Bar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -374,7 +374,7 @@ MeshRenderer:
   m_RenderingLayerMask: 257
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a0d9048f96ab5de44a7472f8232514ec, type: 2}
+  - {fileID: 2100000, guid: bc985e509b81bfe4a8a8b0ebc8b2719c, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -478,7 +478,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 2
@@ -495,11 +495,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d8d933e0b522334e8eb41346ca3ce76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _mesh: {fileID: -8670151273213183110, guid: 6faff53991e3f454ba1e8aa3fe20eddb, type: 3}
-  _material: {fileID: 2100000, guid: 29b3abb141a7d414b889c7b63f34cd56, type: 2}
+  _mesh1: {fileID: -8670151273213183110, guid: 6faff53991e3f454ba1e8aa3fe20eddb, type: 3}
+  _mesh2: {fileID: -8670151273213183110, guid: 650ae139df7ed8240adf575f1f708d29, type: 3}
+  _material1: {fileID: 2100000, guid: 29b3abb141a7d414b889c7b63f34cd56, type: 2}
+  _material2: {fileID: 2100000, guid: 759e285882683844da64268a78ddc776, type: 2}
+  _ratio: 0.9
   _dimensions:
-    x: 20
-    y: 20
+    x: 40
+    y: 40
   _displacement: 20
-  _steepness: 0.4
+  _steepness: 0.3
   _seed: 123

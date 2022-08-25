@@ -92,6 +92,15 @@
         "com.unity.render-pipelines.core": "14.0.3"
       }
     },
+    "jp.keijiro.kino.post-processing": {
+      "version": "2.1.15",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.render-pipelines.high-definition": "7.4.1"
+      },
+      "url": "https://registry.npmjs.com"
+    },
     "jp.keijiro.metamesh": {
       "version": "1.0.2",
       "depth": 0,
