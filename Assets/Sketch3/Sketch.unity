@@ -146,8 +146,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 291532290}
-  m_LocalRotation: {x: 0.22957534, y: 0.44601488, z: -0.119509354, w: 0.85678667}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: 0.12448501, y: -0.2981332, z: 0.039249968, w: 0.94555783}
+  m_LocalPosition: {x: 0, y: 0.07, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -449,13 +449,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4dabea146b2d56449b96aced586ba3c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _count: 5
+  _count: 7
   _length: 2
   _frequency: 10
-  _extent: 0.4
-  _shrink: 28
+  _extent: 0.5
+  _shrink: 20
   _radius: 0.0008
-  _seed: 123
+  _seed: 442
 --- !u!4 &1710345700
 Transform:
   m_ObjectHideFlags: 0
@@ -469,7 +469,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!1 &1824105327
 GameObject:
@@ -482,7 +482,7 @@ GameObject:
   - component: {fileID: 1824105329}
   - component: {fileID: 1824105328}
   m_Layer: 0
-  m_Name: Sketch
+  m_Name: Floor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -519,5 +519,5 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

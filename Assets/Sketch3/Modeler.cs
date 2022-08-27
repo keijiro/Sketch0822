@@ -42,10 +42,10 @@ sealed class Modeler
 
     float3 GetPointOnLine(float z)
     {
-        var phi = math.PI * 2 * Frequency * z;
-        var r = math.float2(math.cos(phi), math.sin(phi));
-        r *= Extent / (1 + z * Shrink);
-        return math.float3(r, z * Length);
+        float x = noise.snoise(math.float2(z * Frequency, 0.5f));
+        float y = noise.snoise(math.float2(z * Frequency, 8.5f));
+        var s = Extent / (1 + z * Shrink);
+        return math.float3(x * s, y * s, z * Length);
     }
 
     void BuildVertexArray(NativeSlice<float3> buffer)
