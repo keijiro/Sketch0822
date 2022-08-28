@@ -1,24 +1,15 @@
 using UnityEngine;
-using Unity.Collections;
-using Unity.Mathematics;
+using System.Collections.Generic;
 
 namespace Sketch4 {
 
-sealed class GeometryCache : System.IDisposable
+sealed class GeometryCache
 {
-    public NativeArray<float3> Vertices;
-    public NativeArray<uint> Indices;
-
-    public void Dispose()
-    {
-        if (Vertices.IsCreated) Vertices.Dispose();
-        if (Indices.IsCreated) Indices.Dispose();
-    }
+    public List<Vector3> Vertices = new List<Vector3>();
+    public List<int> Indices = new List<int>();
 
     public GeometryCache(Mesh mesh)
     {
-        Vertices = Util.AllocateBuffer<float3>((uint)mesh.vertexCount);
-        Indices = Util.AllocateBuffer<uint>((uint)mesh.GetIndexCount(0));
         mesh.GetVertices(Vertices);
         mesh.GetIndices(Indices, 0);
     }

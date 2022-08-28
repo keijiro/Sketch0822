@@ -1,7 +1,5 @@
 using UnityEngine;
-using Unity.Collections;
-using Unity.Mathematics;
-using Random = Unity.Mathematics.Random;
+using System;
 
 namespace Sketch4 {
 
@@ -9,7 +7,7 @@ sealed class Modeler
 {
     #region Model properties
 
-    public float3 Position { get; set; }
+    public Vector3 Position { get; set; }
     public float Rotation { get; set; }
     public GeometryCache Shape { get; set; }
 
@@ -17,16 +15,16 @@ sealed class Modeler
 
     #region Private utility properties
 
-    public uint VertexCount => (uint)Shape.Vertices.Length;
-    public uint IndexCount => (uint)Shape.Indices.Length;
+    public int VertexCount => Shape.Vertices.Count;
+    public int IndexCount => Shape.Indices.Count;
 
     #endregion
 
     #region Public methods
 
-    public void BuildGeometry(NativeSlice<float3> vertices,
-                              NativeSlice<uint> indices,
-                              uint indexOffset)
+    public void BuildGeometry(Span<Vector3> vertices,
+                              Span<int> indices,
+                              int indexOffset)
     {
         CopyVertices(vertices);
         CopyIndices(indices, indexOffset);
@@ -36,15 +34,17 @@ sealed class Modeler
 
     #region Builder methods
 
-    void CopyVertices(NativeSlice<float3> dest)
+    void CopyVertices(Span<Vector3> dest)
     {
-        for (var i = 0; i < Shape.Vertices.Length; i++)
-            dest[i] = Shape.Vertices[i];
+        var rot = Quaternion.AngleAxis(Rotation, Vector3.forward);
+        var mtx = Matrix4x4.TRS(Position, rot, Vector3.one);
+        for (var i = 0; i < Shape.Vertices.Count; i++)
+            dest[i] = (Vector3)(mtx * Shape.Vertices[i]) + Position;
     }
 
-    void CopyIndices(NativeSlice<uint> dest, uint offs)
+    void CopyIndices(Span<int> dest, int offs)
     {
-        for (var i = 0; i < Shape.Indices.Length; i++)
+        for (var i = 0; i < Shape.Indices.Count; i++)
             dest[i] = Shape.Indices[i] + offs;
     }
 
