@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Rendering;
 using System;
 using System.Collections.Generic;
 
@@ -33,6 +34,7 @@ static class MeshBuilder
         }
 
         var mesh = new Mesh();
+        mesh.indexFormat = IndexFormat.UInt32;
         mesh.SetVertices(vbuf);
         mesh.SetIndices(ibuf, MeshTopology.Triangles, 0);
         mesh.bounds = new Bounds(Vector3.zero, Vector3.one * 1000);

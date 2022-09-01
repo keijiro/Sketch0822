@@ -9,7 +9,7 @@ sealed class Strands : MonoBehaviour
 {
     [SerializeField] int _poleCount = 5;
     [SerializeField] float _baseRange = 10;
-    [SerializeField] int _nodeCount = 5;
+    [SerializeField] float _decay = 0.9f;
     [SerializeField] float _nodeStride = 0.1f;
     [SerializeField] Mesh _shape = null;
     [SerializeField] uint _seed = 1234;
@@ -26,16 +26,29 @@ sealed class Strands : MonoBehaviour
 
         for (var i = 0; i < _poleCount; i++)
         {
-            var pos = math.float3(rand.NextFloat2(-0.5f, 0.5f) * _baseRange, 0);
+            var p0 = math.float3(rand.NextFloat2(-0.5f, 0.5f) * _baseRange, 0);
+            var prob = 1.0f;
+            var decay = rand.NextFloat(0.1f, 1.0f) * _decay;
+            var diag = rand.NextFloat() < 0.5f;
 
-            for (var j = 0; j < _nodeCount; j++)
+            while (prob > 0.3f)
             {
-                var m = new Modeler()
-                  { Position = pos, Rotation = 30 * j, Shape = shape };
+                var arm = diag ? math.float2(0.707f, 0.707f) : math.float2(1, 0);
 
-                stack.Push(m);
+                for (var k = 0; k < 4; k++)
+                {
+                    var p1 = p0;
+                    p1.xy += arm * _nodeStride / 2;
 
-                pos += math.float3(0, 0, _nodeStride);
+                    if (rand.NextFloat() < prob)
+                        stack.Push(new Modeler()
+                          { Position = p1, Rotation = 90 * k + (diag ? 45 : 0), Shape = shape });
+
+                    arm = arm.yx * math.float2(-1, 1);
+                }
+
+                p0.z += _nodeStride;
+                prob *= rand.NextFloat(decay, 1.0f);
             }
         }
 
