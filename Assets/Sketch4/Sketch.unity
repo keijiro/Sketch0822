@@ -187,10 +187,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _poleCount: 80
-  _baseRange: 2.5
+  _baseRange: 1.25
   _decay: 0.96
   _nodeStride: 0.1
-  _shape: {fileID: -8670151273213183110, guid: 9ce01fc53b3523141825b150101134b2, type: 3}
+  _boardMesh: {fileID: -8670151273213183110, guid: 9ce01fc53b3523141825b150101134b2, type: 3}
+  _poleMesh: {fileID: -8670151273213183110, guid: 0f4e77f962c4bb646b3fd1a5e289118c, type: 3}
   _seed: 1632
 --- !u!4 &403490014
 Transform:
@@ -565,7 +566,7 @@ GameObject:
   - component: {fileID: 1948918614}
   - component: {fileID: 1948918613}
   m_Layer: 0
-  m_Name: Light (1)
+  m_Name: Light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
