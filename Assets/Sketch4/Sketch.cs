@@ -39,24 +39,34 @@ sealed class Strands : MonoBehaviour
             // Probability decay coefficient
             var decay = hash.Float(0.1f, 0.96f, seed++);
 
-            for (var prob = 1.0f; prob > 0.3f;)
+            for (var prob = 1.0f; prob > 0.2f;)
             {
                 for (var k = 0; k < 4; k++)
                 {
                     // Rotation
-                    angle += 90;
+                    var rot = float2x2.Rotate(math.radians(angle));
 
-                    // Probability test
-                    if (hash.Float(seed++) > prob) continue;
+                    // Board
+                    var d1 = math.float2(_nodeStride * 0.5f, 0);
+                    var p1 = pos + math.float3(math.mul(rot, d1), 0);
 
-                    // Node position
-                    var d = math.float2(_nodeStride * 0.5f, 0);
-                    d = math.mul(float2x2.Rotate(math.radians(angle)), d);
-                    var p = pos + math.float3(d, 0);
+                    // Pole
+                    var d2 = (float2)(_nodeStride * 0.5f);
+                    var p2 = pos + math.float3(math.mul(rot, d2), 0);
 
                     // Modeler addition
+                    if (hash.Float(seed++) < prob)
+                        modeling.Push(new Modeler()
+                          { Position = p1, Rotation = angle, Shape = board });
+
                     modeling.Push(new Modeler()
-                      { Position = p, Rotation = angle, Shape = board });
+                      { Position = p2, Rotation = angle, Shape = pole });
+
+                    modeling.Push(new Modeler()
+                      { Position = pos, Shape = pole });
+
+                    // Rotation advance
+                    angle += 90;
                 }
 
                 // Stride

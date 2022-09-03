@@ -40,8 +40,8 @@ ScriptedImporter:
     Caps: 1
   _roundedBox:
     Width: 0.005
-    Height: 0.09
-    Depth: 0.09
+    Height: 0.093
+    Depth: 0.093
     Divisions: 3
     Radius: 0.0025
   _ring:
