@@ -10,9 +10,10 @@ sealed class Strands : MonoBehaviour
     [SerializeField] int _poleCount = 5;
     [SerializeField] float _baseRange = 10;
     [SerializeField] float _nodeStride = 0.1f;
-    [SerializeField, ColorUsage(false, true)] Color _emissionColor1 = Color.white;
-    [SerializeField, ColorUsage(false, true)] Color _emissionColor2 = Color.white;
     [SerializeField, Range(0, 1)] float _emissionRate = 0.5f;
+    [SerializeField] Color _emissionColor1 = Color.white;
+    [SerializeField] Color _emissionColor2 = Color.white;
+    [SerializeField] float _emissionIntensity = 10;
     [SerializeField] Mesh _boardMesh = null;
     [SerializeField] Mesh _poleMesh = null;
     [SerializeField] uint _seed = 1234;
@@ -41,6 +42,7 @@ sealed class Strands : MonoBehaviour
             // Emitter
             var emitter = hash.Float(seed++) < _emissionRate;
             var ecolor = hash.Bool(seed++) ? _emissionColor1 : _emissionColor2;
+            ecolor *= _emissionIntensity;
 
             // Probability decay coefficient
             var decay = hash.Float(0.1f, 0.96f, seed++);

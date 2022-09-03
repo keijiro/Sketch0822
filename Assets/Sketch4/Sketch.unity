@@ -189,9 +189,10 @@ MonoBehaviour:
   _poleCount: 80
   _baseRange: 1.25
   _nodeStride: 0.1
-  _emissionColor1: {r: 112.66719, g: 31.967926, b: 0.7886669, a: 1}
-  _emissionColor2: {r: 0, g: 55.714535, b: 112.66719, a: 1}
-  _emissionRate: 0.5
+  _emissionRate: 0.4
+  _emissionColor1: {r: 0, g: 0.17183256, b: 0.22745098, a: 1}
+  _emissionColor2: {r: 1, g: 0.116883114, b: 0, a: 1}
+  _emissionIntensity: 600
   _boardMesh: {fileID: -8670151273213183110, guid: 9ce01fc53b3523141825b150101134b2, type: 3}
   _poleMesh: {fileID: -8670151273213183110, guid: 0f4e77f962c4bb646b3fd1a5e289118c, type: 3}
   _seed: 2784
@@ -286,7 +287,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1301261133}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -3}
+  m_LocalPosition: {x: 0, y: 0, z: -6}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -436,11 +437,11 @@ Camera:
   m_projectionMatrixMode: 2
   m_GateFitMode: 2
   m_FOVAxisMode: 0
-  m_Iso: 200
-  m_ShutterSpeed: 0.005
+  m_Iso: 2000
+  m_ShutterSpeed: 0.02
   m_Aperture: 0.7
-  m_FocusDistance: 10
-  m_FocalLength: 29.007364
+  m_FocusDistance: 6
+  m_FocalLength: 60
   m_BladeCount: 5
   m_Curvature: {x: 2, y: 11}
   m_BarrelClipping: 0.25
@@ -455,7 +456,7 @@ Camera:
     height: 1
   near clip plane: 0.1
   far clip plane: 100
-  field of view: 30.000002
+  field of view: 14.762174
   orthographic: 0
   orthographic size: 5
   m_Depth: 0
