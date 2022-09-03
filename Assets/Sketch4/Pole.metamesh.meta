@@ -58,4 +58,4 @@ ScriptedImporter:
     Axis: 2
     DoubleSided: 0
   _generateLightmapUVs: 0
-  _readWriteMeshes: 0
+  _readWriteMeshes: 1
