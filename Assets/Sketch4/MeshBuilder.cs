@@ -17,6 +17,7 @@ static class MeshBuilder
         }
 
         var vbuf = new Vector3[vcount];
+        var cbuf = new Vector4[vcount];
         var ibuf = new int[icount];
 
         var (voffs, ioffs) = (0, 0);
@@ -25,9 +26,10 @@ static class MeshBuilder
             var (vc, ic) = (m.VertexCount, m.IndexCount);
 
             var vspan = new Span<Vector3>(vbuf, voffs, vc);
+            var cspan = new Span<Vector4>(cbuf, voffs, vc);
             var ispan = new Span<int>(ibuf, ioffs, ic);
 
-            m.BuildGeometry(vspan, ispan, voffs);
+            m.BuildGeometry(vspan, cspan, ispan, voffs);
 
             voffs += vc;
             ioffs += ic;
@@ -36,6 +38,7 @@ static class MeshBuilder
         var mesh = new Mesh();
         mesh.indexFormat = IndexFormat.UInt32;
         mesh.SetVertices(vbuf);
+        mesh.SetUVs(0, cbuf);
         mesh.SetIndices(ibuf, MeshTopology.Triangles, 0);
         mesh.bounds = new Bounds(Vector3.zero, Vector3.one * 1000);
         mesh.RecalculateNormals();

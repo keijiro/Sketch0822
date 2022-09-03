@@ -9,8 +9,10 @@ sealed class Strands : MonoBehaviour
 {
     [SerializeField] int _poleCount = 5;
     [SerializeField] float _baseRange = 10;
-    [SerializeField] float _decay = 0.9f;
     [SerializeField] float _nodeStride = 0.1f;
+    [SerializeField, ColorUsage(false, true)] Color _emissionColor1 = Color.white;
+    [SerializeField, ColorUsage(false, true)] Color _emissionColor2 = Color.white;
+    [SerializeField, Range(0, 1)] float _emissionRate = 0.5f;
     [SerializeField] Mesh _boardMesh = null;
     [SerializeField] Mesh _poleMesh = null;
     [SerializeField] uint _seed = 1234;
@@ -35,6 +37,10 @@ sealed class Strands : MonoBehaviour
             // Position / angle
             var pos = math.float3(hash.InCircle(seed++) * _baseRange, 0);
             var angle = hash.Bool(seed++) ? 0 : 45;
+
+            // Emitter
+            var emitter = hash.Float(seed++) < _emissionRate;
+            var ecolor = hash.Bool(seed++) ? _emissionColor1 : _emissionColor2;
 
             // Probability decay coefficient
             var decay = hash.Float(0.1f, 0.96f, seed++);
@@ -62,8 +68,9 @@ sealed class Strands : MonoBehaviour
                     modeling.Push(new Modeler()
                       { Position = p2, Rotation = angle, Shape = pole });
 
-                    modeling.Push(new Modeler()
-                      { Position = pos, Shape = pole });
+                    if (emitter)
+                        modeling.Push(new Modeler()
+                          { Position = pos, Color = ecolor, Shape = pole });
 
                     // Rotation advance
                     angle += 90;
@@ -74,6 +81,18 @@ sealed class Strands : MonoBehaviour
 
                 // Probability decay
                 prob *= hash.Float(decay, 1.0f, seed++);
+            }
+
+            // Emitter extension
+            if (emitter)
+            {
+                var ext = hash.Int(10, seed++);
+                for (var j = 0; j < ext; j++)
+                {
+                    modeling.Push(new Modeler()
+                      { Position = pos, Color = ecolor, Shape = pole });
+                    pos.z += _nodeStride;
+                }
             }
         }
 

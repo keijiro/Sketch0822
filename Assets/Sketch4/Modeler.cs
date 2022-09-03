@@ -9,6 +9,7 @@ sealed class Modeler
 
     public Vector3 Position { get; set; }
     public float Rotation { get; set; }
+    public Vector4 Color { get; set; }
     public GeometryCache Shape { get; set; }
 
     #endregion
@@ -23,10 +24,12 @@ sealed class Modeler
     #region Public methods
 
     public void BuildGeometry(Span<Vector3> vertices,
+                              Span<Vector4> uvs,
                               Span<int> indices,
                               int indexOffset)
     {
         CopyVertices(vertices);
+        FillUVs(uvs);
         CopyIndices(indices, indexOffset);
     }
 
@@ -40,6 +43,12 @@ sealed class Modeler
         var mtx = Matrix4x4.TRS(Position, rot, Vector3.one);
         for (var i = 0; i < Shape.Vertices.Count; i++)
             dest[i] = (Vector3)(mtx * Shape.Vertices[i]) + Position;
+    }
+
+    void FillUVs(Span<Vector4> dest)
+    {
+        var v = (Vector4)Color;
+        for (var i = 0; i < Shape.Vertices.Count; i++) dest[i] = v;
     }
 
     void CopyIndices(Span<int> dest, int offs)
