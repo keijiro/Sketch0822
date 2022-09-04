@@ -7,7 +7,7 @@ namespace Sketch4 {
 
 static class MeshBuilder
 {
-    public static Mesh Build(IEnumerable<Modeler> modelers)
+    public static void Build(Mesh mesh, IEnumerable<Modeler> modelers)
     {
         var (vcount, icount) = (0, 0);
         foreach (var m in modelers)
@@ -35,7 +35,6 @@ static class MeshBuilder
             ioffs += ic;
         }
 
-        var mesh = new Mesh();
         mesh.indexFormat = IndexFormat.UInt32;
         mesh.SetVertices(vbuf);
         mesh.SetUVs(0, cbuf);
@@ -43,7 +42,6 @@ static class MeshBuilder
         mesh.bounds = new Bounds(Vector3.zero, Vector3.one * 1000);
         mesh.RecalculateNormals();
         mesh.RecalculateBounds();
-        return mesh;
     }
 }
 

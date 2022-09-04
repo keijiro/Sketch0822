@@ -5,8 +5,11 @@ using Random = Unity.Mathematics.Random;
 
 namespace Sketch4 {
 
+[ExecuteInEditMode]
 sealed class Sketch : MonoBehaviour
 {
+    #region Editable attributes
+
     [SerializeField] int _poleCount = 5;
     [SerializeField] float _baseRange = 10;
     [SerializeField] float _nodeStride = 0.1f;
@@ -18,19 +21,17 @@ sealed class Sketch : MonoBehaviour
     [SerializeField] Mesh _poleMesh = null;
     [SerializeField] uint _seed = 1234;
 
-    Mesh _mesh;
+    #endregion
 
-    void Start()
+    #region Modeling
+
+    (GeometryCache board, GeometryCache pole) _shapes;
+    Stack<Modeler> _modelers;
+
+    void AddModelers()
     {
-        // Meshes
-        var board = new GeometryCache(_boardMesh);
-        var pole = new GeometryCache(_poleMesh);
-
         // PRNG
         var (hash, seed) = (new XXHash(_seed), 0u);
-
-        // Modeler stack
-        var modeling = new Stack<Modeler>();
 
         // Pole population
         for (var i = 0; i < _poleCount; i++)
@@ -64,15 +65,15 @@ sealed class Sketch : MonoBehaviour
 
                     // Modeler addition
                     if (hash.Float(seed++) < prob)
-                        modeling.Push(new Modeler()
-                          { Position = p1, Rotation = angle, Shape = board });
+                        _modelers.Push(new Modeler()
+                          { Position = p1, Rotation = angle, Shape = _shapes.board });
 
-                    modeling.Push(new Modeler()
-                      { Position = p2, Rotation = angle, Shape = pole });
+                    _modelers.Push(new Modeler()
+                      { Position = p2, Rotation = angle, Shape = _shapes.pole });
 
                     if (emitter)
-                        modeling.Push(new Modeler()
-                          { Position = pos, Color = ecolor, Shape = pole });
+                        _modelers.Push(new Modeler()
+                          { Position = pos, Color = ecolor, Shape = _shapes.pole });
 
                     // Rotation advance
                     angle += 90;
@@ -91,20 +92,54 @@ sealed class Sketch : MonoBehaviour
                 var ext = hash.Int(10, seed++);
                 for (var j = 0; j < ext; j++)
                 {
-                    modeling.Push(new Modeler()
-                      { Position = pos, Color = ecolor, Shape = pole });
+                    _modelers.Push(new Modeler()
+                      { Position = pos, Color = ecolor, Shape = _shapes.pole });
                     pos.z += _nodeStride;
                 }
             }
         }
+    }
 
-        // Mesh building
-        _mesh = MeshBuilder.Build(modeling);
+    #endregion
+
+    #region MonoBehaviour implementation
+
+    Mesh _mesh;
+
+    void Start()
+    {
+        // Geometry cache
+        _shapes.board = new GeometryCache(_boardMesh);
+        _shapes.pole = new GeometryCache(_poleMesh);
+
+        // Temporary mesh object
+        _mesh = new Mesh();
+        _mesh.hideFlags = HideFlags.DontSave;
         GetComponent<MeshFilter>().sharedMesh = _mesh;
+
+        // Initial mesh construction
+        _modelers = new Stack<Modeler>();
+        AddModelers();
+        MeshBuilder.Build(_mesh, _modelers);
+    }
+
+    void OnValidate()
+    {
+        if (_mesh == null || _modelers == null) return;
+
+        // Clear
+        _modelers.Clear();
+        _mesh.Clear();
+
+        // Reconstruction
+        AddModelers();
+        MeshBuilder.Build(_mesh, _modelers);
     }
 
     void OnDestroy()
       => Util.DestroyObject(_mesh);
+
+    #endregion
 }
 
 } // namespace Sketch4

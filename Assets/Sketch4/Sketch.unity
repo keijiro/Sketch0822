@@ -195,7 +195,7 @@ MonoBehaviour:
   _emissionIntensity: 600
   _boardMesh: {fileID: -8670151273213183110, guid: 9ce01fc53b3523141825b150101134b2, type: 3}
   _poleMesh: {fileID: -8670151273213183110, guid: 0f4e77f962c4bb646b3fd1a5e289118c, type: 3}
-  _seed: 2784
+  _seed: 8513
 --- !u!4 &403490014
 Transform:
   m_ObjectHideFlags: 0
@@ -226,7 +226,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 2
+  m_RayTracingMode: 3
   m_RayTraceProcedural: 0
   m_RenderingLayerMask: 257
   m_RendererPriority: 0
