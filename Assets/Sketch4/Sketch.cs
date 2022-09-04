@@ -5,7 +5,7 @@ using Random = Unity.Mathematics.Random;
 
 namespace Sketch4 {
 
-sealed class Strands : MonoBehaviour
+sealed class Sketch : MonoBehaviour
 {
     [SerializeField] int _poleCount = 5;
     [SerializeField] float _baseRange = 10;
