@@ -1,5 +1,7 @@
 using UnityEngine;
 using UnityEngine.Rendering;
+using Unity.Collections;
+using Unity.Collections.LowLevel.Unsafe;
 using System;
 using System.Collections.Generic;
 
@@ -7,7 +9,15 @@ namespace Sketch4 {
 
 static class MeshBuilder
 {
-    public static void Build(Mesh mesh, IEnumerable<Modeler> modelers)
+    static NativeArray<T> NewBuffer<T>(int length) where T : unmanaged
+      => new NativeArray<T>(length, Allocator.Persistent,
+                            NativeArrayOptions.UninitializedMemory);
+
+    unsafe static Span<T>
+      GetSpan<T>(this NativeArray<T> array) where T : unmanaged
+        => new Span<T>(NativeArrayUnsafeUtility.GetUnsafePtr(array), array.Length);
+
+    unsafe public static void Build(Mesh mesh, IEnumerable<Modeler> modelers)
     {
         var (vcount, icount) = (0, 0);
         foreach (var m in modelers)
@@ -16,20 +26,24 @@ static class MeshBuilder
             icount += m.IndexCount;
         }
 
-        var vbuf = new Vector3[vcount];
-        var cbuf = new Vector4[vcount];
-        var ibuf = new int[icount];
+        using var vbuf = NewBuffer<Vector3>(vcount);
+        using var cbuf = NewBuffer<Vector4>(vcount);
+        using var ibuf = NewBuffer<int>(icount);
+
+        var vspan = vbuf.GetSpan();
+        var cspan = cbuf.GetSpan();
+        var ispan = ibuf.GetSpan();
 
         var (voffs, ioffs) = (0, 0);
         foreach (var m in modelers)
         {
             var (vc, ic) = (m.VertexCount, m.IndexCount);
 
-            var vspan = new Span<Vector3>(vbuf, voffs, vc);
-            var cspan = new Span<Vector4>(cbuf, voffs, vc);
-            var ispan = new Span<int>(ibuf, ioffs, ic);
+            var vslice = vspan.Slice(voffs, vc);
+            var cslice = cspan.Slice(voffs, vc);
+            var islice = ispan.Slice(ioffs, ic);
 
-            m.BuildGeometry(vspan, cspan, ispan, voffs);
+            m.BuildGeometry(vslice, cslice, islice, voffs);
 
             voffs += vc;
             ioffs += ic;
