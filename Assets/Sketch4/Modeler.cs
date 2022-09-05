@@ -1,32 +1,44 @@
 using UnityEngine;
+using Unity.Mathematics;
 using System;
 
 namespace Sketch4 {
 
-sealed class Modeler
+readonly struct Modeler
 {
     #region Model properties
 
-    public Vector3 Position { get; set; }
-    public float Rotation { get; set; }
-    public Vector4 Color { get; set; }
-    public GeometryCache Shape { get; set; }
+    readonly float3 _position;
+    readonly float _rotation;
+    readonly float4 _color;
+    readonly GeometryCacheRef _shape;
 
     #endregion
 
     #region Private utility properties
 
-    public int VertexCount => Shape.Vertices.Count;
-    public int IndexCount => Shape.Indices.Count;
+    public int VertexCount => _shape.Vertices.Length;
+    public int IndexCount => _shape.Indices.Length;
 
     #endregion
 
     #region Public methods
 
-    public void BuildGeometry(Span<Vector3> vertices,
-                              Span<Vector4> uvs,
-                              Span<int> indices,
-                              int indexOffset)
+    public Modeler(Vector3 position,
+                   float rotation,
+                   Color color,
+                   GeometryCacheRef shape)
+    {
+        _position = position;
+        _rotation = rotation;
+        _color = (Vector4)color;
+        _shape = shape;
+    }
+
+    public void BuildGeometry(Span<float3> vertices,
+                              Span<float4> uvs,
+                              Span<uint> indices,
+                              uint indexOffset)
     {
         CopyVertices(vertices);
         FillUVs(uvs);
@@ -37,24 +49,23 @@ sealed class Modeler
 
     #region Builder methods
 
-    void CopyVertices(Span<Vector3> dest)
+    void CopyVertices(Span<float3> dest)
     {
-        var rot = Quaternion.AngleAxis(Rotation, Vector3.forward);
-        var mtx = Matrix4x4.TRS(Position, rot, Vector3.one);
-        for (var i = 0; i < Shape.Vertices.Count; i++)
-            dest[i] = (Vector3)(mtx * Shape.Vertices[i]) + Position;
+        var rot = quaternion.RotateZ(_rotation);
+        var mtx = float4x4.TRS(_position, rot, 1);
+        for (var i = 0; i < _shape.Vertices.Length; i++)
+            dest[i] = math.transform(mtx, _shape.Vertices[i]);// + _position;
     }
 
-    void FillUVs(Span<Vector4> dest)
+    void FillUVs(Span<float4> dest)
     {
-        var v = (Vector4)Color;
-        for (var i = 0; i < Shape.Vertices.Count; i++) dest[i] = v;
+        for (var i = 0; i < _shape.Vertices.Length; i++) dest[i] = _color;
     }
 
-    void CopyIndices(Span<int> dest, int offs)
+    void CopyIndices(Span<uint> dest, uint offs)
     {
-        for (var i = 0; i < Shape.Indices.Count; i++)
-            dest[i] = Shape.Indices[i] + offs;
+        for (var i = 0; i < _shape.Indices.Length; i++)
+            dest[i] = _shape.Indices[i] + offs;
     }
 
     #endregion

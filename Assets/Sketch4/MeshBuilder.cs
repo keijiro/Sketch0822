@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
+using Unity.Mathematics;
 using System;
 using System.Collections.Generic;
 
@@ -26,9 +27,9 @@ static class MeshBuilder
             icount += m.IndexCount;
         }
 
-        using var vbuf = NewBuffer<Vector3>(vcount);
-        using var cbuf = NewBuffer<Vector4>(vcount);
-        using var ibuf = NewBuffer<int>(icount);
+        using var vbuf = NewBuffer<float3>(vcount);
+        using var cbuf = NewBuffer<float4>(vcount);
+        using var ibuf = NewBuffer<uint>(icount);
 
         var vspan = vbuf.GetSpan();
         var cspan = cbuf.GetSpan();
@@ -43,7 +44,7 @@ static class MeshBuilder
             var cslice = cspan.Slice(voffs, vc);
             var islice = ispan.Slice(ioffs, ic);
 
-            m.BuildGeometry(vslice, cslice, islice, voffs);
+            m.BuildGeometry(vslice, cslice, islice, (uint)voffs);
 
             voffs += vc;
             ioffs += ic;

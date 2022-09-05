@@ -38,7 +38,7 @@ sealed class Sketch : MonoBehaviour
         {
             // Position / angle
             var pos = math.float3(hash.InCircle(seed++) * _baseRange, 0);
-            var angle = hash.Bool(seed++) ? 0 : 45;
+            var angle = hash.Bool(seed++) ? 0 : math.PI / 4;
 
             // Emitter
             var emitter = hash.Float(seed++) < _emissionRate;
@@ -53,7 +53,7 @@ sealed class Sketch : MonoBehaviour
                 for (var k = 0; k < 4; k++)
                 {
                     // Rotation
-                    var rot = float2x2.Rotate(math.radians(angle));
+                    var rot = float2x2.Rotate(angle);
 
                     // Board
                     var d1 = math.float2(_nodeStride * 0.5f, 0);
@@ -65,18 +65,18 @@ sealed class Sketch : MonoBehaviour
 
                     // Modeler addition
                     if (hash.Float(seed++) < prob)
-                        _modelers.Push(new Modeler()
-                          { Position = p1, Rotation = angle, Shape = _shapes.board });
+                        _modelers.Push(new Modeler(
+                          position: p1, rotation: angle, color: Color.black, shape: _shapes.board));
 
-                    _modelers.Push(new Modeler()
-                      { Position = p2, Rotation = angle, Shape = _shapes.pole });
+                    _modelers.Push(new Modeler(
+                      position: p2, rotation: angle, color: Color.black, shape: _shapes.pole ));
 
                     if (emitter)
-                        _modelers.Push(new Modeler()
-                          { Position = pos, Color = ecolor, Shape = _shapes.pole });
+                        _modelers.Push(new Modeler(
+                          position: pos, rotation: 0, color: ecolor, shape: _shapes.pole ));
 
                     // Rotation advance
-                    angle += 90;
+                    angle += math.PI / 2;
                 }
 
                 // Stride
@@ -92,8 +92,8 @@ sealed class Sketch : MonoBehaviour
                 var ext = hash.Int(10, seed++);
                 for (var j = 0; j < ext; j++)
                 {
-                    _modelers.Push(new Modeler()
-                      { Position = pos, Color = ecolor, Shape = _shapes.pole });
+                    _modelers.Push(new Modeler(
+                      position: pos, rotation: 0, color: ecolor, shape: _shapes.pole ));
                     pos.z += _nodeStride;
                 }
             }
@@ -137,7 +137,12 @@ sealed class Sketch : MonoBehaviour
     }
 
     void OnDestroy()
-      => Util.DestroyObject(_mesh);
+    {
+        Util.DestroyObject(_mesh);
+        _shapes.board?.Dispose();
+        _shapes.pole?.Dispose();
+        _shapes = (null, null);
+    }
 
     #endregion
 }
