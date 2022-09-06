@@ -23,6 +23,50 @@ sealed class Sketch : MonoBehaviour
 
     #endregion
 
+    #region MonoBehaviour implementation
+
+    Mesh _mesh;
+
+    void Start()
+    {
+        // Geometry cache
+        _shapes.board = new GeometryCache(_boardMesh);
+        _shapes.pole = new GeometryCache(_poleMesh);
+
+        // Temporary mesh object
+        _mesh = new Mesh();
+        _mesh.hideFlags = HideFlags.DontSave;
+        GetComponent<MeshFilter>().sharedMesh = _mesh;
+
+        // Initial mesh construction
+        _modelers = new Stack<Modeler>();
+        AddModelers();
+        MeshBuilder.Build(_mesh, _modelers);
+    }
+
+    void OnValidate()
+    {
+        if (_mesh == null || _modelers == null) return;
+
+        // Clear
+        _modelers.Clear();
+        _mesh.Clear();
+
+        // Reconstruction
+        AddModelers();
+        MeshBuilder.Build(_mesh, _modelers);
+    }
+
+    void OnDestroy()
+    {
+        Util.DestroyObject(_mesh);
+        _shapes.board?.Dispose();
+        _shapes.pole?.Dispose();
+        _shapes = (null, null);
+    }
+
+    #endregion
+
     #region Modeling
 
     (GeometryCache board, GeometryCache pole) _shapes;
@@ -65,15 +109,18 @@ sealed class Sketch : MonoBehaviour
 
                     // Modeler addition
                     if (hash.Float(seed++) < prob)
-                        _modelers.Push(new Modeler(
-                          position: p1, rotation: angle, color: Color.black, shape: _shapes.board));
+                        _modelers.Push(new Modeler
+                          (position: p1, rotation: angle,
+                           color: Color.black, shape: _shapes.board));
 
-                    _modelers.Push(new Modeler(
-                      position: p2, rotation: angle, color: Color.black, shape: _shapes.pole ));
+                    _modelers.Push(new Modeler
+                      (position: p2, rotation: angle,
+                       color: Color.black, shape: _shapes.pole));
 
                     if (emitter)
-                        _modelers.Push(new Modeler(
-                          position: pos, rotation: 0, color: ecolor, shape: _shapes.pole ));
+                        _modelers.Push(new Modeler
+                          (position: pos, rotation: 0,
+                           color: ecolor, shape: _shapes.pole));
 
                     // Rotation advance
                     angle += math.PI / 2;
@@ -92,56 +139,13 @@ sealed class Sketch : MonoBehaviour
                 var ext = hash.Int(10, seed++);
                 for (var j = 0; j < ext; j++)
                 {
-                    _modelers.Push(new Modeler(
-                      position: pos, rotation: 0, color: ecolor, shape: _shapes.pole ));
+                    _modelers.Push(new Modeler
+                      (position: pos, rotation: 0,
+                       color: ecolor, shape: _shapes.pole ));
                     pos.z += _nodeStride;
                 }
             }
         }
-    }
-
-    #endregion
-
-    #region MonoBehaviour implementation
-
-    Mesh _mesh;
-
-    void Start()
-    {
-        // Geometry cache
-        _shapes.board = new GeometryCache(_boardMesh);
-        _shapes.pole = new GeometryCache(_poleMesh);
-
-        // Temporary mesh object
-        _mesh = new Mesh();
-        _mesh.hideFlags = HideFlags.DontSave;
-        GetComponent<MeshFilter>().sharedMesh = _mesh;
-
-        // Initial mesh construction
-        _modelers = new Stack<Modeler>();
-        AddModelers();
-        MeshBuilder.Build(_mesh, _modelers);
-    }
-
-    void OnValidate()
-    {
-        if (_mesh == null || _modelers == null) return;
-
-        // Clear
-        _modelers.Clear();
-        _mesh.Clear();
-
-        // Reconstruction
-        AddModelers();
-        MeshBuilder.Build(_mesh, _modelers);
-    }
-
-    void OnDestroy()
-    {
-        Util.DestroyObject(_mesh);
-        _shapes.board?.Dispose();
-        _shapes.pole?.Dispose();
-        _shapes = (null, null);
     }
 
     #endregion
