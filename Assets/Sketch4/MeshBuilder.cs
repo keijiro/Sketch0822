@@ -18,7 +18,7 @@ static class MeshBuilder
       GetSpan<T>(this NativeArray<T> array) where T : unmanaged
         => new Span<T>(NativeArrayUnsafeUtility.GetUnsafePtr(array), array.Length);
 
-    unsafe public static void Build(Mesh mesh, IEnumerable<Modeler> modelers)
+    unsafe public static void Build(Span<Modeler> modelers, Mesh mesh)
     {
         var (vcount, icount) = (0, 0);
         foreach (var m in modelers)

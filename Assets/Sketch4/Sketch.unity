@@ -186,16 +186,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a279cacd45b9a847b2745caed63d908, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _poleCount: 80
-  _baseRange: 1.25
-  _nodeStride: 0.1
-  _emissionRate: 0.4
-  _emissionColor1: {r: 0, g: 0.17183256, b: 0.22745098, a: 1}
-  _emissionColor2: {r: 1, g: 0.116883114, b: 0, a: 1}
-  _emissionIntensity: 600
+  _config:
+    PoleCount: 80
+    BaseRange: 1.25
+    NodeStride: 0.1
+    EmissionRate: 0.4
+    EmissionColor1: {r: 0, g: 0.17183256, b: 0.22745098, a: 1}
+    EmissionColor2: {r: 1, g: 0.116883114, b: 0, a: 1}
+    EmissionIntensity: 600
+    Seed: 10
   _boardMesh: {fileID: -8670151273213183110, guid: 9ce01fc53b3523141825b150101134b2, type: 3}
   _poleMesh: {fileID: -8670151273213183110, guid: 0f4e77f962c4bb646b3fd1a5e289118c, type: 3}
-  _seed: 9262
+  _modelCapacity: 10000
 --- !u!4 &403490014
 Transform:
   m_ObjectHideFlags: 0
